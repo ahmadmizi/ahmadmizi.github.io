@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Access Restricted</title>
-<style>
+    <style>
         body {
             font-family: Calibri, sans-serif;
             background-color: #f0f0f0;
@@ -28,21 +28,41 @@
         .button:hover {
             background-color: #B5BD50;
         }
-      h1 {
-        font-family: Calibri, sans-serif;
-        color: #0080C5;
-      }
-</style>    
+        h1 {
+            font-family: Calibri, sans-serif;
+            color: #0080C5;
+        }
+    </style>    
 </head>
-<body>
 <body>
     <div class="container">
         <h1>Access Restricted</h1>
-        <p>You are attempting to access a site that provides unendorsed Gen AI chat services. Please <b><u>do not upload any confidential or sensitive information</u></b> to the page you are attempting to go. </p>
-		<p>For a secure and positive experience, please read our guidelines by following this <a href="https://power2grow.sharepoint.com/sites/ICTDeptPortal/GenAI/SiteAssets/Do%E2%80%99s%20and%20Dont%27s%20Guide%201.png?web=1">link </a> before clicking "Continue".</p>
-        <p>For information, Microsoft Copilot is our officially endorsed Gen AI Chat tool. <a href="https://copilot.cloud.microsoft/"> Click here to use Microsoft Copilot.</a></p>
-		<p>By proceeding to your intended page, your activity will be tracked and included in the statistics, which may be reported to your line manager if necessary.</p>
-		<p><button class="button" onclick="history.back()">Yes, proceed at my own risk</button>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<button class="button" onclick="window.close()">No, please close this browser</button></p>
+        <p>You are attempting to access a site that provides unendorsed Gen AI chat services. Please <b><u>do not upload any confidential or sensitive information</u></b> to the page you are attempting to go.</p>
+        <p>For a secure and positive experience, please read our guidelines by following this <a href="https://power2grow.sharepoint.com/sites/ICTDeptPortal/GenAI/SiteAssets/Do%E2%80%99s%20and%20Dont%27s%20Guide%201.png?web=1">link </a> before clicking "Continue".</p>
+        <p>For information, Microsoft Copilot is our officially endorsed Gen AI Chat tool. <a href="https://copilot.cloud.microsoft/">Click here to use Microsoft Copilot.</a></p>
+        <p>By proceeding to your intended page, your activity will be tracked and included in the statistics, which may be reported to your line manager if necessary.</p>
+        <p>
+            <button class="button" onclick="proceedToRedirect()">Yes, proceed at my own risk</button>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            <button class="button" onclick="window.close()">No, please close this browser</button>
+        </p>
     </div>
+
+    <script>
+        // Function to extract query parameter 'redirect' from URL
+        function getRedirectUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('redirect');
+        }
+
+        // Function to handle the redirection
+        function proceedToRedirect() {
+            const redirectUrl = getRedirectUrl();
+            if (redirectUrl) {
+                window.location.href = redirectUrl; // Redirect to the provided URL
+            } else {
+                alert("No valid destination URL provided.");
+            }
+        }
+    </script>
 </body>
 </html>

@@ -16,6 +16,8 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
         }
         .button {
             background-color: #0080C5;
@@ -24,6 +26,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin: 10px;
         }
         .button:hover {
             background-color: #B5BD50;
@@ -37,32 +40,25 @@
 <body>
     <div class="container">
         <h1>Access Restricted</h1>
-        <p>You are attempting to access a site that provides unendorsed Gen AI chat services. Please <b><u>do not upload any confidential or sensitive information</u></b> to the page you are attempting to go.</p>
-        <p>For a secure and positive experience, please read our guidelines by following this <a href="https://power2grow.sharepoint.com/sites/ICTDeptPortal/GenAI/SiteAssets/Do%E2%80%99s%20and%20Dont%27s%20Guide%201.png?web=1">link </a> before clicking "Continue".</p>
-        <p>For information, Microsoft Copilot is our officially endorsed Gen AI Chat tool. <a href="https://copilot.cloud.microsoft/">Click here to use Microsoft Copilot.</a></p>
+        <p>You are attempting to access a site that provides unendorsed Gen AI chat services. Please <b><u>do not upload any confidential or sensitive information</u></b> to the page you are attempting to go. </p>
+        <p>For a secure and positive experience, please read our guidelines by following this <a href="https://power2grow.sharepoint.com/sites/ICTDeptPortal/GenAI/SiteAssets/Do%E2%80%99s%20and%20Dont%27s%20Guide%201.png?web=1" target="_blank">link</a> before clicking "Continue".</p>
+        <p>For information, Microsoft Copilot is our officially endorsed Gen AI Chat tool. <a href="https://copilot.cloud.microsoft/" target="_blank">Click here to use Microsoft Copilot.</a></p>
         <p>By proceeding to your intended page, your activity will be tracked and included in the statistics, which may be reported to your line manager if necessary.</p>
-        <p>
-            <button class="button" onclick="proceedToRedirect()">Yes, proceed at my own risk</button>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        <div>
+            <button class="button" id="proceedButton">Yes, proceed at my own risk</button>
             <button class="button" onclick="window.close()">No, please close this browser</button>
-        </p>
+        </div>
     </div>
 
     <script>
-        // Function to extract the destination URL from the query parameter 'to'
-        function getRedirectUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('to');  // Extracts 'to' parameter
-        }
-
-        // Function to handle the redirection after clicking "Accept"
-        function proceedToRedirect() {
-            const redirectUrl = getRedirectUrl();
-            if (redirectUrl) {
-                window.location.href = 'https://' + redirectUrl; // Redirect to the provided URL (ensure it includes https://)
-            } else {
-                alert("No valid destination URL provided.");
-            }
-        }
+        // Get the URL parameter for the redirect destination
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirect') || document.referrer || 'about:blank';
+        
+        document.getElementById('proceedButton').addEventListener('click', function() {
+            // Log the access if needed (you could add an API call here)
+            window.location.href = redirectUrl;
+        });
     </script>
 </body>
 </html>

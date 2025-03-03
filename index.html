@@ -51,9 +51,6 @@
     </div>
 
     <script>
-        // Store the original destination URL when the page loads
-        let originalUrl = "";
-        
         // Function to get URL parameter
         function getParameterByName(name) {
             const url = window.location.href;
@@ -65,24 +62,44 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
         
-        // Try to get the destination from URL parameter
-        originalUrl = getParameterByName('url') || getParameterByName('redirect') || getParameterByName('destination');
+        // Get the original URL from Zscaler parameters
+        let originalUrl = getParameterByName('url') || 
+                          getParameterByName('redirect') || 
+                          getParameterByName('orig_url') ||
+                          getParameterByName('ru');
         
         // If no parameter is found, try to use the referrer
         if (!originalUrl && document.referrer) {
             originalUrl = document.referrer;
         }
         
-        // If still no URL, provide a default
-        if (!originalUrl) {
-            // You can set this to your default destination
-            originalUrl = "https://www.example.com";
+        // Store the URL in sessionStorage to prevent losing it during redirects
+        if (originalUrl) {
+            sessionStorage.setItem('redirectTarget', originalUrl);
+        } else {
+            // Try to get from sessionStorage if it was saved earlier
+            originalUrl = sessionStorage.getItem('redirectTarget');
         }
         
+        // Set up the proceed button
         document.getElementById('proceedButton').addEventListener('click', function() {
-            // Navigate to the original URL
-            window.location.href = originalUrl;
+            // Set a session cookie to prevent loops
+            document.cookie = "aiWarningAcknowledged=true; path=/";
+            
+            if (originalUrl) {
+                // Navigate to the original URL
+                window.location.href = originalUrl;
+            } else {
+                // If we still don't have a URL, just go back in history
+                history.back();
+            }
         });
+        
+        // Check if we're in a potential loop and the user has already acknowledged
+        if (document.cookie.indexOf('aiWarningAcknowledged=true') !== -1 && originalUrl) {
+            // Auto-redirect if they've already acknowledged
+            window.location.href = originalUrl;
+        }
     </script>
 </body>
 </html>

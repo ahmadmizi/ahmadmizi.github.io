@@ -51,13 +51,37 @@
     </div>
 
     <script>
-        // Get the URL parameter for the redirect destination
-        const urlParams = new URLSearchParams(window.location.search);
-        const redirectUrl = urlParams.get('redirect') || document.referrer || 'about:blank';
+        // Store the original destination URL when the page loads
+        let originalUrl = "";
+        
+        // Function to get URL parameter
+        function getParameterByName(name) {
+            const url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            const results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+        
+        // Try to get the destination from URL parameter
+        originalUrl = getParameterByName('url') || getParameterByName('redirect') || getParameterByName('destination');
+        
+        // If no parameter is found, try to use the referrer
+        if (!originalUrl && document.referrer) {
+            originalUrl = document.referrer;
+        }
+        
+        // If still no URL, provide a default
+        if (!originalUrl) {
+            // You can set this to your default destination
+            originalUrl = "https://www.example.com";
+        }
         
         document.getElementById('proceedButton').addEventListener('click', function() {
-            // Log the access if needed (you could add an API call here)
-            window.location.href = redirectUrl;
+            // Navigate to the original URL
+            window.location.href = originalUrl;
         });
     </script>
 </body>

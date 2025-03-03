@@ -48,17 +48,17 @@
     </div>
 
     <script>
-        // Function to extract query parameter 'redirect' from URL
+        // Function to extract the destination URL from the query parameter 'to'
         function getRedirectUrl() {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('redirect');
+            return urlParams.get('to');  // Extracts 'to' parameter
         }
 
-        // Function to handle the redirection
+        // Function to handle the redirection after clicking "Accept"
         function proceedToRedirect() {
             const redirectUrl = getRedirectUrl();
             if (redirectUrl) {
-                window.location.href = redirectUrl; // Redirect to the provided URL
+                window.location.href = 'https://' + redirectUrl; // Redirect to the provided URL (ensure it includes https://)
             } else {
                 alert("No valid destination URL provided.");
             }

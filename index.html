@@ -27,6 +27,8 @@
             border-radius: 5px;
             cursor: pointer;
             margin: 10px;
+            font-family: Calibri, sans-serif;
+            font-size: 16px;
         }
         .button:hover {
             background-color: #B5BD50;
@@ -34,6 +36,20 @@
         h1 {
             font-family: Calibri, sans-serif;
             color: #0080C5;
+        }
+        #submitButton {
+            background-color: #0080C5;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-family: Calibri, sans-serif;
+            font-size: 16px;
+        }
+        #submitButton:hover {
+            background-color: #B5BD50;
         }
     </style>    
 </head>
@@ -45,7 +61,13 @@
         <p>For information, Microsoft Copilot is our officially endorsed Gen AI Chat tool. <a href="https://copilot.cloud.microsoft/" target="_blank">Click here to use Microsoft Copilot.</a></p>
         <p>By proceeding to your intended page, your activity will be tracked and included in the statistics, which may be reported to your line manager if necessary.</p>
         <div>
-            <button class="button" id="proceedButton">Yes, proceed at my own risk</button>
+            <!-- Zscaler-recommended continue form -->
+            <form id="continue_action" method="GET" action="https://gateway.zscaler.net:443/_sm_ctn">
+                <input type="hidden" name="_sm_url" id="sm_url">
+                <input type="hidden" name="_sm_rid" id="sm_rid">
+                <input type="hidden" name="_sm_cat" id="sm_cat">
+                <input type="submit" value="Yes, proceed at my own risk" id="submitButton" class="button">
+            </form>
             <button class="button" onclick="window.close()">No, please close this browser</button>
         </div>
     </div>
@@ -62,43 +84,27 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
         
-        // Get the original URL from Zscaler parameters
-        let originalUrl = getParameterByName('url') || 
-                          getParameterByName('redirect') || 
-                          getParameterByName('orig_url') ||
-                          getParameterByName('ru');
+        // Get Zscaler parameters
+        const url = getParameterByName('url');
+        const zsq = getParameterByName('zsq');
+        const cat = getParameterByName('cat');
         
-        // If no parameter is found, try to use the referrer
-        if (!originalUrl && document.referrer) {
-            originalUrl = document.referrer;
-        }
-        
-        // Store the URL in sessionStorage to prevent losing it during redirects
-        if (originalUrl) {
-            sessionStorage.setItem('redirectTarget', originalUrl);
-        } else {
-            // Try to get from sessionStorage if it was saved earlier
-            originalUrl = sessionStorage.getItem('redirectTarget');
-        }
-        
-        // Set up the proceed button
-        document.getElementById('proceedButton').addEventListener('click', function() {
-            // Set a session cookie to prevent loops
-            document.cookie = "aiWarningAcknowledged=true; path=/";
-            
-            if (originalUrl) {
-                // Navigate to the original URL
-                window.location.href = originalUrl;
+        // Set the form values
+        if (url) document.getElementById('sm_url').value = url;
+        if (zsq) {
+            // Extract the rid from zsq parameter
+            const ridParts = zsq.split('zsq');
+            if (ridParts.length > 1) {
+                document.getElementById('sm_rid').value = ridParts[1];
             } else {
-                // If we still don't have a URL, just go back in history
-                history.back();
+                document.getElementById('sm_rid').value = zsq;
             }
-        });
+        }
+        if (cat) document.getElementById('sm_cat').value = cat;
         
-        // Check if we're in a potential loop and the user has already acknowledged
-        if (document.cookie.indexOf('aiWarningAcknowledged=true') !== -1 && originalUrl) {
-            // Auto-redirect if they've already acknowledged
-            window.location.href = originalUrl;
+        // If we don't have the required parameters, hide the form
+        if (!url || !zsq) {
+            document.getElementById('continue_action').style.display = 'none';
         }
     </script>
 </body>

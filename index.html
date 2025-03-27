@@ -1,111 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Restricted</title>
-    <style>
-        body {
-            font-family: Calibri, sans-serif;
-            background-color: #f0f0f0;
-            text-align: center;
-            padding: 50px;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .button {
-            background-color: #0080C5;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px;
-            font-family: Calibri, sans-serif;
-            font-size: 16px;
-        }
-        .button:hover {
-            background-color: #B5BD50;
-        }
-        h1 {
-            font-family: Calibri, sans-serif;
-            color: #0080C5;
-        }
-        #submitButton {
-            background-color: #0080C5;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px;
-            font-family: Calibri, sans-serif;
-            font-size: 16px;
-        }
-        #submitButton:hover {
-            background-color: #B5BD50;
-        }
-    </style>    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Restricted</title>
+  <style>
+    body {
+      font-family: Calibri, sans-serif;
+      background-color: #f0f0f0;
+      text-align: center;
+      padding: 50px;
+    }
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .button {
+      background-color: #0080C5;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .button:hover {
+      background-color: #B5BD50;
+    }
+    h1 {
+      font-family: Calibri, sans-serif;
+      color: #0080C5;
+    }
+  </style>
+  <script>
+    function getRedirectURL() {
+      // Get URL parameters
+      const params = new URLSearchParams(window.location.search);
+      let originalURL = params.get("url");
+      
+      if (originalURL) {
+        // Decode the URL in case it's encoded
+        originalURL = decodeURIComponent(originalURL);
+        // Set the href attribute of the "Proceed" button
+        document.getElementById("proceedButton").href = originalURL;
+      } else {
+        // Hide the button if no URL is found
+        document.getElementById("proceedButton").style.display = "none";
+      }
+    }
+  </script>
 </head>
-<body>
-    <div class="container">
-        <h1>Access Restricted</h1>
-        <p>You are attempting to access a site that provides unendorsed Gen AI chat services. Please <b><u>do not upload any confidential or sensitive information</u></b> to the page you are attempting to go. </p>
-        <p>For a secure and positive experience, please read our guidelines by following this <a href="https://power2grow.sharepoint.com/sites/ICTDeptPortal/GenAI/SiteAssets/Do%E2%80%99s%20and%20Dont%27s%20Guide%201.png?web=1" target="_blank">link</a> before clicking "Continue".</p>
-        <p>For information, Microsoft Copilot is our officially endorsed Gen AI Chat tool. <a href="https://copilot.cloud.microsoft/" target="_blank">Click here to use Microsoft Copilot.</a></p>
-        <p>By proceeding to your intended page, your activity will be tracked and included in the statistics, which may be reported to your line manager if necessary.</p>
-        <div>
-            <!-- Zscaler-recommended continue form -->
-            <form id="continue_action" method="GET" action="https://gateway.zscaler.net:443/_sm_ctn">
-                <input type="hidden" name="_sm_url" id="sm_url">
-                <input type="hidden" name="_sm_rid" id="sm_rid">
-                <input type="hidden" name="_sm_cat" id="sm_cat">
-                <input type="submit" value="Yes, proceed at my own risk" id="submitButton" class="button">
-            </form>
-            <button class="button" onclick="window.close()">No, please close this browser</button>
-        </div>
-    </div>
-
-    <script>
-        // Function to get URL parameter
-        function getParameterByName(name) {
-            const url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-            const results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
-        
-        // Get Zscaler parameters
-        const url = getParameterByName('url');
-        const zsq = getParameterByName('zsq');
-        const cat = getParameterByName('cat');
-        
-        // Set the form values
-        if (url) document.getElementById('sm_url').value = url;
-        if (zsq) {
-            // Extract the rid from zsq parameter
-            const ridParts = zsq.split('zsq');
-            if (ridParts.length > 1) {
-                document.getElementById('sm_rid').value = ridParts[1];
-            } else {
-                document.getElementById('sm_rid').value = zsq;
-            }
-        }
-        if (cat) document.getElementById('sm_cat').value = cat;
-        
-        // If we don't have the required parameters, hide the form
-        if (!url || !zsq) {
-            document.getElementById('continue_action').style.display = 'none';
-        }
-    </script>
+<body onload="getRedirectURL()">
+  <div class="container">
+    <h1>Access Restricted</h1>
+    <p>You are attempting to access a site that provides unendorsed Gen AI chat services. Please <b><u>do not upload any confidential or sensitive information</u></b> to the page you are attempting to go.</p>
+    <p>For a secure and positive experience, please read our guidelines before clicking "Continue".</p>
+    <p>For information, Microsoft Copilot is our officially endorsed Gen AI Chat tool. <a href="https://copilot.cloud.microsoft/">Click here to use Microsoft Copilot.</a></p>
+    <p>By proceeding to your intended page, your activity will be tracked and included in the statistics, which may be reported to your line manager if necessary.</p>
+    <p>
+      <a id="proceedButton" class="button">Yes, proceed at my own risk</a>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button class="button" onclick="window.close()">No, please close this browser</button>
+    </p>
+  </div>
 </body>
 </html>
